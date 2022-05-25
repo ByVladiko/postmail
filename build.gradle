@@ -1,0 +1,48 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.liquibase.gradle" version "2.1.1"
+    id 'java'
+    id 'war'
+}
+
+group = 'com.vldby'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+    liquibaseRuntime 'org.postgresql:postgresql'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+liquibase {
+    activities {
+        main {
+            File propsFile = new File('src/main/resources/application.properties')
+            Properties properties = new Properties()
+            properties.load(new FileInputStream(propsFile))
+            changeLogFile 'src/main/resources/liquibase/db.changelog-master.yaml'
+            url '${properties.spring.datasource.url}'
+            username '${properties.spring.datasource.username}'
+            password '${properties.spring.datasource.password}'
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
