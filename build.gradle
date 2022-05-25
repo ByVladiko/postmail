@@ -1,4 +1,5 @@
 plugins {
+    id 'idea'
     id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id "org.liquibase.gradle" version "2.1.1"
@@ -45,4 +46,9 @@ liquibase {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jar {
+    baseName = 'postmailapp'
+    version = '0.0.1'
 }
